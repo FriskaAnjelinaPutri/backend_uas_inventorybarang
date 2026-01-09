@@ -9,7 +9,7 @@ services:
     volumes:
       - ./product-service/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - "5433:5432"
 
   product-service:
     build: ./product-service
@@ -20,3 +20,24 @@ services:
       - ./product-service/.env
     depends_on:
       - postgres-product
+
+  mysql-inventory:
+    image: mysql:8
+    container_name: mysql-inventory
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: inventory_db
+    volumes:
+      - ./inventory-service/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3307:3306"
+
+  inventory-service:
+    build: ./inventory-service
+    container_name: inventory-service
+    ports:
+      - "8002:8000"
+    env_file:
+      - ./inventory-service/.env
+    depends_on:
+      - mysql-inventory
