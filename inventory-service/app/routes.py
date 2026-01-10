@@ -8,7 +8,7 @@ router = APIRouter()
 # SCHEMA
 # =====================
 class Inventory(BaseModel):
-    kode_barang: str
+    id_produk: int
     jumlah_stok: int
     stok_minimum: int
     lokasi_gudang: str | None = None
@@ -24,12 +24,12 @@ def create_inventory(data: Inventory):
 
     query = """
         INSERT INTO inventory
-        (kode_barang, jumlah_stok, stok_minimum, lokasi_gudang)
+        (id_produk, jumlah_stok, stok_minimum, lokasi_gudang)
         VALUES (%s, %s, %s, %s)
     """
 
     cursor.execute(query, (
-        data.kode_barang,
+        data.id_produk,
         data.jumlah_stok,
         data.stok_minimum,
         data.lokasi_gudang
@@ -98,7 +98,7 @@ def update_inventory(id: int, data: Inventory):
 
     query = """
         UPDATE inventory
-        SET kode_barang=%s,
+        SET id_produk=%s,
             jumlah_stok=%s,
             stok_minimum=%s,
             lokasi_gudang=%s
@@ -106,7 +106,7 @@ def update_inventory(id: int, data: Inventory):
     """
 
     cursor.execute(query, (
-        data.kode_barang,
+        data.id_produk,
         data.jumlah_stok,
         data.stok_minimum,
         data.lokasi_gudang,
