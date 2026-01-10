@@ -41,3 +41,27 @@ services:
       - ./inventory-service/.env
     depends_on:
       - mysql-inventory
+
+
+  mongo-distribution:
+    image: mongo:6
+    container_name: mongo-distribution
+    ports:
+      - "27018:27017"
+
+  distribution-service:
+    build: ./distribution-service
+    container_name: distribution-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongo-distribution
+
+  user-service:
+    build: ./user-service
+    image: user-service:latest
+    container_name: user-service
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./user-service/database:/app/database
