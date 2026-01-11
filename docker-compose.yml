@@ -57,11 +57,11 @@ services:
     depends_on:
       - mongo-distribution
 
-  user-service:
-    build: ./user-service
-    image: user-service:latest
-    container_name: user-service
+  user-servicee:
+    build: ./user-servicee
+    image: user-servicee:latest
+    container_name: user-servicee
     ports:
       - "8001:8000"
     volumes:
-      - ./user-service/database:/app/database
+      - ./user-servicee/database:/app/database
