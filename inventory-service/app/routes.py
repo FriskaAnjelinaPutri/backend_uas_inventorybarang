@@ -14,6 +14,10 @@ class Inventory(BaseModel):
     lokasi_gudang: str | None = None
 
 
+class DecreaseStockRequest(BaseModel):
+    jumlah: int
+
+
 # =====================
 # CREATE
 # =====================
@@ -149,3 +153,76 @@ def delete_inventory(id: int):
     db.close()
 
     return {"message": "Data inventory berhasil dihapus"}
+
+
+# =====================
+# GET BY PRODUCT ID
+# =====================
+@router.get("/inventory/product/{id_produk}")
+def get_inventory_by_product(id_produk: int):
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM inventory WHERE id_produk=%s", (id_produk,))
+    data = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    if not data:
+        raise HTTPException(status_code=404, detail="Inventory untuk produk dengan id " + str(id_produk) + " tidak ditemukan")
+
+    return data
+
+
+# =====================
+# DECREASE STOCK BY PRODUCT ID
+# =====================
+@router.patch("/inventory/product/{id_produk}/decrease")
+def decrease_stock(id_produk: int, request: DecreaseStockRequest):
+    """
+    Mengurangi stok inventory berdasarkan id_produk
+    Body: {"jumlah": <jumlah_yang_dikurangi>}
+    """
+    jumlah = request.jumlah
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+
+    # Cek apakah inventory ada
+    cursor.execute("SELECT * FROM inventory WHERE id_produk=%s", (id_produk,))
+    inventory = cursor.fetchone()
+
+    if not inventory:
+        cursor.close()
+        db.close()
+        raise HTTPException(status_code=404, detail="Inventory untuk produk dengan id " + str(id_produk) + " tidak ditemukan")
+
+    # Cek apakah stok cukup
+    stok_sekarang = inventory['jumlah_stok']
+    if stok_sekarang < jumlah:
+        cursor.close()
+        db.close()
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Stok tidak cukup. Stok tersedia: {stok_sekarang}, yang diminta: {jumlah}"
+        )
+
+    # Kurangi stok
+    stok_baru = stok_sekarang - jumlah
+    cursor.execute(
+        "UPDATE inventory SET jumlah_stok=%s WHERE id_produk=%s",
+        (stok_baru, id_produk)
+    )
+    db.commit()
+
+    # Ambil data terbaru
+    cursor.execute("SELECT * FROM inventory WHERE id_produk=%s", (id_produk,))
+    updated_data = cursor.fetchone()
+
+    cursor.close()
+    db.close()
+
+    return {
+        "message": f"Stok berhasil dikurangi sebanyak {jumlah}",
+        "data": updated_data
+    }

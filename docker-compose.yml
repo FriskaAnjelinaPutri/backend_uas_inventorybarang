@@ -56,6 +56,7 @@ services:
       - "8083:8083"
     depends_on:
       - mongo-distribution
+      - inventory-service
 
   user-service:
     build: ./user-service

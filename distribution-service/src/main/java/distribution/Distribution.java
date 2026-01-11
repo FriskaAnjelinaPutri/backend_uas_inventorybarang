@@ -14,24 +14,77 @@ public class Distribution {
 
     @Field("id_produk")
     private Long idProduk;
+
+    @Field("jumlah_kirim")
     private Integer jumlahKirim;
+
     private String tujuan;
+
+    @Field("status_pengiriman")
     private String statusPengiriman;
-    private LocalDateTime tanggalKirim = LocalDateTime.now();
 
-    public Distribution() {}
+    @Field("tanggal_kirim")
+    private LocalDateTime tanggalKirim;
 
-    public String getId() { return id; }
-    public Long getIdProduk() { return idProduk; }
-    public Integer getJumlahKirim() { return jumlahKirim; }
-    public String getTujuan() { return tujuan; }
-    public String getStatusPengiriman() { return statusPengiriman; }
-    public LocalDateTime getTanggalKirim() { return tanggalKirim; }
+    // =====================
+    // CONSTRUCTOR
+    // =====================
+    public Distribution() {
+        this.tanggalKirim = LocalDateTime.now();
+        this.statusPengiriman = "DIKIRIM";
+    }
 
-    public void setId(String id) { this.id = id; }
-    public void setIdProduk(Long idProduk) { this.idProduk = idProduk; }
-    public void setJumlahKirim(Integer jumlahKirim) { this.jumlahKirim = jumlahKirim; }
-    public void setTujuan(String tujuan) { this.tujuan = tujuan; }
-    public void setStatusPengiriman(String statusPengiriman) { this.statusPengiriman = statusPengiriman; }
-    public void setTanggalKirim(LocalDateTime tanggalKirim) { this.tanggalKirim = tanggalKirim; }
+    // =====================
+    // GETTER
+    // =====================
+    public String getId() {
+        return id;
+    }
+
+    public Long getIdProduk() {
+        return idProduk;
+    }
+
+    public Integer getJumlahKirim() {
+        return jumlahKirim;
+    }
+
+    public String getTujuan() {
+        return tujuan;
+    }
+
+    public String getStatusPengiriman() {
+        return statusPengiriman;
+    }
+
+    public LocalDateTime getTanggalKirim() {
+        return tanggalKirim;
+    }
+
+    // =====================
+    // SETTER
+    // =====================
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setIdProduk(Long idProduk) {
+        this.idProduk = idProduk;
+    }
+
+    public void setJumlahKirim(Integer jumlahKirim) {
+        this.jumlahKirim = jumlahKirim;
+    }
+
+    public void setTujuan(String tujuan) {
+        this.tujuan = tujuan;
+    }
+
+    public void setStatusPengiriman(String statusPengiriman) {
+        this.statusPengiriman = statusPengiriman;
+    }
+
+    public void setTanggalKirim(LocalDateTime tanggalKirim) {
+        this.tanggalKirim = tanggalKirim;
+    }
 }
